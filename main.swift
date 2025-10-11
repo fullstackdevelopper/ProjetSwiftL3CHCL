@@ -1,6 +1,77 @@
 import Foundation;
-var choix_menu_principal:Int = 0;
+var choix_menu_principal:Int = 0
+var nb_etudiant:Int = 0
 
+var dictionnaire_etudiants:[String:Any]=[:]
+
+func AjouterEtudiant(){
+	var nom:String = ""
+	while(nom == ""){
+		print("Saisir le nom de l'etudiant : ", terminator :"")
+		if let saisi_nom = readLine(){
+			nom = saisi_nom
+			if(nom == ""){
+				print("\nErreur : Le nom ne peut pas etre vide\n")
+			}
+		}
+	}
+
+	var prenom:String = ""
+	while(prenom == ""){
+		print("Saisir le prenom de l'etudiant : ", terminator:"")
+		if let saisi_prenom = readLine(){
+			prenom = saisi_prenom
+			if(prenom == ""){
+				print("\nErreur : Le prenom ne peut pas etre vide \n")
+			}
+		}
+	}
+	var age:Int = 0
+	while(age == 0 || age < 0){
+		print("Saisir l'age de l'etudiant : ", terminator:"")
+		if let saisi_age = readLine(){
+			if let saisi_age_Int = Int(saisi_age){
+				age = saisi_age_Int
+				if (age<0){
+					print("\nErreur : L'age ne peut pas etre inferieur a 0\n")
+				}
+			}else{
+				print("\nErreur: Saisi invalide !\n")
+			}
+		}
+	}
+
+	var niveau:Int = 0
+	while(niveau == 0 || niveau < 0){
+		print("Saisir le niveau de l'etudiant : ", terminator:"")
+		if let saisi_niveau = readLine(){
+			if let saisi_niveau_Int = Int(saisi_niveau){
+				niveau = saisi_niveau_Int
+				if(niveau < 0){
+					print("\nErreur : Le niveau ne peut pas etre inferieur a 0.\n")
+				}
+			}else{
+				print("\nErreur: Saisi invalide !\n")
+				}
+		}
+	}
+	nb_etudiant = nb_etudiant+1
+	let etudiant:[String:Any] = [
+		"id" : nb_etudiant,
+		"nom" : nom,
+		"prenom" : prenom,
+		"age" : age,
+		"niveau" : niveau
+	]
+	
+	dictionnaire_etudiants[String(nb_etudiant)] = etudiant
+	print(dictionnaire_etudiants)
+
+}
+
+AjouterEtudiant()
+
+/*
 //Menu principal
 func menu_principal() -> Int{
     var choix:Int = 0
@@ -98,5 +169,4 @@ func gestion_des_taches(){
 }
 
 gestion_des_taches()
-
-
+*/
