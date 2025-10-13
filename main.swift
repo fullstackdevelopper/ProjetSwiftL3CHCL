@@ -5,71 +5,138 @@ var nb_etudiant:Int = 0
 var dictionnaire_etudiants:[String:Any]=[:]
 
 func AjouterEtudiant(){
-	var nom:String = ""
-	while(nom == ""){
-		print("Saisir le nom de l'etudiant : ", terminator :"")
-		if let saisi_nom = readLine(){
-			nom = saisi_nom
-			if(nom == ""){
-				print("\nErreur : Le nom ne peut pas etre vide\n")
+	var condition = true
+	while(condition == true){
+		var nom:String = ""
+		while(nom == ""){
+			print("\nSaisir le nom de l'etudiant : ", terminator :"")
+			if let saisi_nom = readLine(){
+				nom = saisi_nom
+				if(nom == ""){
+					print("\nErreur : Le nom ne peut pas etre vide\n")
+				}
 			}
 		}
-	}
 
-	var prenom:String = ""
-	while(prenom == ""){
-		print("Saisir le prenom de l'etudiant : ", terminator:"")
-		if let saisi_prenom = readLine(){
-			prenom = saisi_prenom
-			if(prenom == ""){
-				print("\nErreur : Le prenom ne peut pas etre vide \n")
-			}
-		}
-	}
-	var age:Int = 0
-	while(age == 0 || age < 0){
-		print("Saisir l'age de l'etudiant : ", terminator:"")
-		if let saisi_age = readLine(){
-			if let saisi_age_Int = Int(saisi_age){
-				age = saisi_age_Int
-				if (age<0){
-					print("\nErreur : L'age ne peut pas etre inferieur a 0\n")
+		var prenom:String = ""
+		while(prenom == ""){
+			print("Saisir le prenom de l'etudiant : ", terminator:"")
+			if let saisi_prenom = readLine(){
+				prenom = saisi_prenom
+				if(prenom == ""){
+					print("\nErreur : Le prenom ne peut pas etre vide \n")
 				}
-			}else{
-				print("\nErreur: Saisi invalide !\n")
 			}
 		}
-	}
+		var age:Int = 0
+		while(age == 0 || age < 0){
+			print("Saisir l'age de l'etudiant : ", terminator:"")
+			if let saisi_age = readLine(){
+				if let saisi_age_Int = Int(saisi_age){
+					age = saisi_age_Int
+					if (age<0){
+						print("\nErreur : L'age ne peut pas etre inferieur a 0\n")
+					}
+				}else{
+					print("\nErreur: Saisi invalide !\n")
+				}
+			}
+		}
 
-	var niveau:Int = 0
-	while(niveau == 0 || niveau < 0){
-		print("Saisir le niveau de l'etudiant : ", terminator:"")
-		if let saisi_niveau = readLine(){
-			if let saisi_niveau_Int = Int(saisi_niveau){
-				niveau = saisi_niveau_Int
-				if(niveau < 0){
-					print("\nErreur : Le niveau ne peut pas etre inferieur a 0.\n")
-				}
-			}else{
-				print("\nErreur: Saisi invalide !\n")
-				}
+		var niveau:Int = 0
+		while(niveau == 0 || niveau < 0){
+			print("Saisir le niveau de l'etudiant : ", terminator:"")
+			if let saisi_niveau = readLine(){
+				if let saisi_niveau_Int = Int(saisi_niveau){
+					niveau = saisi_niveau_Int
+					if(niveau < 0){
+						print("\nErreur : Le niveau ne peut pas etre inferieur a 0.\n")
+					}
+				}else{
+					print("\nErreur: Saisi invalide !\n")
+					}
+			}
 		}
-	}
-	nb_etudiant = nb_etudiant+1
-	let etudiant:[String:Any] = [
-		"id" : nb_etudiant,
-		"nom" : nom,
-		"prenom" : prenom,
-		"age" : age,
-		"niveau" : niveau
-	]
+		nb_etudiant = nb_etudiant+1
+		let etudiant:[String:Any] = [
+			"id" : nb_etudiant,
+			"nom" : nom,
+			"prenom" : prenom,
+			"age" : age,
+			"niveau" : niveau
+		]
 	
-	dictionnaire_etudiants[String(nb_etudiant)] = etudiant
-	print(dictionnaire_etudiants)
-
+		dictionnaire_etudiants[String(nb_etudiant)] = etudiant
+		var rep: Int = -1
+		while rep != 0 && rep != 1{
+			print("Voulez vous enregistrer un autre etudiant ?(1 pour dire oui et 0 pour dire non) : ", terminator:"")
+			if let saisi = readLine(), let saisi_Int = Int(saisi){
+				rep = saisi_Int
+				if(rep != 0) && (rep != 1){
+					print("\nErreur : Vous pouvez saisir soit 0, soit 1\n")
+                    } else {
+                        condition = false;
+                        if rep == 1 {
+                            AjouterEtudiant()
+                         }//else {
+                        //     gestion_des_taches()
+                        // }
+                    }
+			}
+		}
+	}
 }
 
+func ListerEtudiant(){
+    for(cle, etudiant) in dictionnaire_etudiants{
+		if let etud = etudiant as? [String:Any],
+			let nom = etud["nom"],
+			let prenom = etud["prenom"],
+			let age = etud["age"],
+			let niveau = etud["niveau"]{
+			print("\(cle) : \(prenom)  \(nom) - \(age) ans - Niveau : \(niveau)")
+	}
+    }
+    
+}
+func CalculMoyenne() -> Double{
+    var note: Double = 0
+    var quantite_note_saisi = 0
+    var moyenne: Double = 0
+    var nom_matiere: String = ""
+    while(nom_matiere == ""){
+        print("\nSaisir le nom de la matiere : ", terminator:"")
+        if let saisi = readLine(){
+            nom_matiere = saisi
+        }
+        print("\nNous alons a present vous inviter a saisir les notes de \(nom_matiere) pour chaque etudiant.\n")
+        for(cle, etudiant) in dictionnaire_etudiants{
+		if let etud = etudiant as? [String:Any],
+            let nom = etud["nom"],
+			let prenom = etud["prenom"]{
+                    print("id : \(cle) \nNom : \(nom)\nPrenom: \(prenom) \nNote : ", terminator:"")
+                if let saisi = readLine(), let saisiDouble = Double(saisi){
+                    note = note + saisiDouble
+                    quantite_note_saisi = quantite_note_saisi + 1
+                }
+                moyenne = note / Double(quantite_note_saisi)
+                print(moyenne)
+                
+            }
+            
+
+        }
+        
+        
+    }
+    return moyenne
+}
+
+
+
 AjouterEtudiant()
+ListerEtudiant()
+var moyenne = CalculMoyenne()
 
 /*
 //Menu principal
