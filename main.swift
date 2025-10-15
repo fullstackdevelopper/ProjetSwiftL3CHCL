@@ -237,3 +237,111 @@ func gestion_des_taches(){
 
 gestion_des_taches()
 */
+
+//Gestion de l'economat
+var descriptions: [String] = []
+var montants: [Double] = []
+//var dates: [String] = []
+
+
+func AjouterTransaction() {
+    var montant: Double = 0
+
+    while true {
+        print("\n\nEntrez le type de transaction")
+        print("1-Paiement scolaire")
+        print("2-Depense")
+        print("3-Entree d'argent")
+        print("0-Quitter")
+        
+        print("Votre choix : ",terminator: "")
+        
+        if let input = readLine(), let choix = Int(input){
+
+            switch choix {
+            case 1:
+                print("\nEntrez l'ID de l'etudiant :",terminator: "")
+                guard let identifiant = readLine(), let id = Int(identifiant), etudiants[id] != nil else {
+                    print("Etudiant introuvable!\n")
+                    continue
+                }
+                print("Entrez le montant du paiement :",terminator: "")
+                guard let Montant = readLine(), let m = Double(Montant) else {
+                    print("Montant invalide!")
+                    continue
+                }
+                print("\nPaiement effectue !")
+                
+                montant = m
+                let desc = "Paiement scolaire de \(etudiants[id]!)"
+                descriptions.append(desc)
+                montants.append(montant)
+                
+            case 2:
+                print("\nEntrez la description de la depense : ", terminator: "")
+                guard let desc = readLine(), !desc.trimmingCharacters(in: .whitespaces).isEmpty else {
+                    print("Description invalide (champ vide) !")
+                    continue
+                }
+                
+                print("Entrez le montant de la depense : ",terminator: "")
+                guard let mont = readLine(), let m = Double(mont) else {
+                    print("Montant invalide!")
+                    continue
+                }
+                montant = -abs(m)
+                montants.append(montant)
+                descriptions.append(desc)
+
+            case 3:
+                print("\nEntrez la description de l'entree d'argent : ", terminator: "")
+                guard let desc = readLine(), !desc.trimmingCharacters(in: .whitespaces).isEmpty else {
+                    print("Description invalide (champ vide) !")
+                    continue
+                }
+
+                print("Entrez le montant : ",terminator: "")
+                guard let mon = readLine(), let m = Double(mon) else {
+                    print("Montant invalide!")
+                    continue
+                }
+                montant = abs(m)
+                montants.append(montant)
+                descriptions.append(desc)
+
+            case 0:
+                return
+                
+            default:
+                print("Choix invalide")
+                return
+            }
+
+            //dates.append("10/10/2025")
+            print("Transaction ajoutee avec succes!")
+        }
+        else {
+                print("Entree invalide ! Veuillez entrer un nombre entier.")
+            }
+    }
+}
+
+func listerTransactions() {
+    if descriptions.isEmpty {
+        print("Aucune transaction disponible.")
+        return
+    }
+    
+    print("\nListe des transactions :")
+    for i in 0..<descriptions.count {
+        print("\(i + 1)-Description : \(descriptions[i]) | Montant : \(montants[i]) HTG")
+    }
+}
+
+func calculerSolde() {
+    var total: Double = 0 
+    for montant in montants {
+        total += montant
+    }
+    print("Le solde actuel est : \(total) HTG")
+}
