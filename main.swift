@@ -1,12 +1,54 @@
 import Foundation;
+//Gestion des etudiants
 var choix_menu_principal:Int = 0
 var nb_etudiant:Int = 0
-
 var dictionnaire_etudiants:[String:Any]=[:]
+var solde_disponible:Double = 0
+
+
+//Gestion de l'economat
+var descriptions: [String] = []
+var montants: [Double] = []
+var identifiants: [Int] = []
+//var dates: [String] = []
+
+//Menu principal
+func menu_principal() -> Int{
+    var choix:Int = 0
+        print("\n1. Gestion des etudiants")
+        print("2. Gestion de l'economat")
+        print("3. Quitter l'application")
+        
+        print("Faites votre choix : ", terminator:"")
+
+        if let input:String = readLine(), let nombre:Int = (Int)(input){
+            choix = nombre
+    }
+    return choix
+}
 
 func AjouterEtudiant(){
 	var condition = true
 	while(condition == true){
+        var id: Int = -1
+        while id == -1 {
+            print("\nSaisir l'id de l'etudiant :", terminator: "")
+            if let saisie = readLine(), let saisie_Int = Int(saisie) {
+                id = saisie_Int
+                
+    
+                for (cle, _) in dictionnaire_etudiants {
+                if let cle_Int = Int(cle), cle_Int == id {
+                    print("Erreur : Il existe deja un autre etudiant dans le systeme avec cet id")
+                    id = -1
+            }
+        }
+    }
+}
+
+
+
+
 		var nom:String = ""
 		while(nom == ""){
 			print("\nSaisir le nom de l'etudiant : ", terminator :"")
@@ -58,18 +100,19 @@ func AjouterEtudiant(){
 			}
 		}
 		nb_etudiant = nb_etudiant+1
+        identifiants.append(id);
 		let etudiant:[String:Any] = [
-			"id" : nb_etudiant,
+			"id" : id,
 			"nom" : nom,
 			"prenom" : prenom,
 			"age" : age,
 			"niveau" : niveau
 		]
 	
-		dictionnaire_etudiants[String(nb_etudiant)] = etudiant
+		dictionnaire_etudiants[String(id)] = etudiant
 		var rep: Int = -1
 		while rep != 0 && rep != 1{
-			print("Voulez vous enregistrer un autre etudiant ?(1 pour dire oui et 0 pour dire non) : ", terminator:"")
+			print("\nVoulez vous enregistrer un autre etudiant ?(1 pour dire oui et 0 pour dire non) : ", terminator:"")
 			if let saisi = readLine(), let saisi_Int = Int(saisi){
 				rep = saisi_Int
 				if(rep != 0) && (rep != 1){
@@ -78,9 +121,9 @@ func AjouterEtudiant(){
                         condition = false;
                         if rep == 1 {
                             AjouterEtudiant()
-                         }//else {
-                        //     gestion_des_taches()
-                        // }
+                         } else {
+                             gestion_des_taches()
+                         }
                     }
 			}
 		}
@@ -94,12 +137,16 @@ func ListerEtudiant(){
 			let prenom = etud["prenom"],
 			let age = etud["age"],
 			let niveau = etud["niveau"]{
-			print("\(cle) : \(prenom)  \(nom) - \(age) ans - Niveau : \(niveau)")
+            print("\nid : \(cle)")
+            print("Nom : \(nom)")
+            print("Prenom : \(prenom)")
+            print("Age : \(age)")
+            print("Niveau : \(niveau)\n")
 	}
     }
     
 }
-func CalculMoyenne() -> Double{
+func CalculMoyenne(){
     var note: Double = 0
     var quantite_note_saisi = 0
     var moyenne: Double = 0
@@ -120,48 +167,20 @@ func CalculMoyenne() -> Double{
                     quantite_note_saisi = quantite_note_saisi + 1
                 }
                 moyenne = note / Double(quantite_note_saisi)
-                print(moyenne)
-                
+                print("La moyenne pour \(nom_matiere) est : \(moyenne)")  
             }
-            
-
         }
-        
-        
     }
-    return moyenne
-}
-
-
-
-AjouterEtudiant()
-ListerEtudiant()
-var moyenne = CalculMoyenne()
-
-/*
-//Menu principal
-func menu_principal() -> Int{
-    var choix:Int = 0
-        print("1. Gestion des etudiants")
-        print("2. Gestion de l'economat")
-        print("3. Quitter l'application")
-        
-        print("Faites votre choix : ")
-
-        if let input:String = readLine(), let nombre:Int = (Int)(input){
-            choix = nombre
-    }
-    return choix
 }
 
 //Menu de gestion des etudiants
 func MenuGestionEtudiant() {
     while true{
-        print("1-ajouter un etudiant")
+        print("\n1-Ajouter un etudiant")
         print("2-Lister tous les etudiants")
         print("3-Calculer la moyenne des notes par matiere")
         print("4-Retour au menu principal")
-        print("Votre choix : ")
+        print("Votre choix : ", terminator: "")
 
         if let input = readLine(), let choix = Int(input){
 
@@ -173,7 +192,7 @@ func MenuGestionEtudiant() {
             case 3:
                 CalculMoyenne()
             case 4:
-                return
+                gestion_des_taches()
             default:
                 print("nombre invalide ! Choisissez un chiffre entre 1 et 4")
             }
@@ -183,65 +202,6 @@ func MenuGestionEtudiant() {
             }
         }
 }
-
-//Menu de gestion de l'economat
-func MenuGestionEconomat() {
-    while true{
-        print("1-Ajouter une transaction financiere")
-        print("2-Lister toutes les transactions")
-        print("3-Calculer le solde actuel")
-        print("4-Retour au menu principal")
-        print("Votre choix : ",terminator: "")
-
-        if let input = readLine(), let choix = Int(input){
-
-            switch choix {
-            case 1:
-                AjouterTransaction()
-            case 2:
-                listerTransactions()
-            case 3:
-                calculerSolde()
-            case 4:
-                return
-            default:
-                print("nombre invalide ! Choisissez un chiffre entre 1 et 4")
-            }
-        }
-        else {
-                print("Entree invalide ! Veuillez entrer un nombre entier.")
-            }
-    }
-}
-
-//Fonction principale
-func gestion_des_taches(){
-    while (choix_menu_principal == 0 || choix_menu_principal < 0 || choix_menu_principal > 3 ){
-        choix_menu_principal = menu_principal()
-        if(choix_menu_principal == 0 || choix_menu_principal < 0 || choix_menu_principal > 3){
-            print("\nVous pouvez choisir un nombre allant de 1 a 3 selon le menu suivant\n")
-        }
-    }
-    switch choix_menu_principal {
-    case 1:
-        MenuGestionEtudiant()
-    case 2:
-        MenuGestionEconomat()
-    case 3:
-        return
-    default:
-        print("Erreur : Saisi incorrecte")
-        return
-    }
-}
-
-gestion_des_taches()
-*/
-
-//Gestion de l'economat
-var descriptions: [String] = []
-var montants: [Double] = []
-//var dates: [String] = []
 
 
 func AjouterTransaction() {
@@ -252,7 +212,7 @@ func AjouterTransaction() {
         print("1-Paiement scolaire")
         print("2-Depense")
         print("3-Entree d'argent")
-        print("0-Quitter")
+        print("0-Retourner au menu precedent")
         
         print("Votre choix : ",terminator: "")
         
@@ -261,7 +221,7 @@ func AjouterTransaction() {
             switch choix {
             case 1:
                 print("\nEntrez l'ID de l'etudiant :",terminator: "")
-                guard let identifiant = readLine(), let id = Int(identifiant), etudiants[id] != nil else {
+                guard let identifiant = readLine(), let id = Int(identifiant), identifiants.contains(id) else {
                     print("Etudiant introuvable!\n")
                     continue
                 }
@@ -272,8 +232,10 @@ func AjouterTransaction() {
                 }
                 print("\nPaiement effectue !")
                 
+                
+
                 montant = m
-                let desc = "Paiement scolaire de \(etudiants[id]!)"
+                let desc = "Paiement scolaire"
                 descriptions.append(desc)
                 montants.append(montant)
                 
@@ -289,9 +251,19 @@ func AjouterTransaction() {
                     print("Montant invalide!")
                     continue
                 }
-                montant = -abs(m)
-                montants.append(montant)
-                descriptions.append(desc)
+                calculerSolde()
+                if(m > solde_disponible){
+                    print("Erreur : Vous ne pouvez pas retirer un montant superieur a \(solde_disponible)")
+                    MenuGestionEconomat()
+                }else{
+                    montant = -abs(m)
+                    montants.append(montant)
+                    descriptions.append(desc)
+                    print("Execution de la demande...")
+                    
+                    calculerSolde()
+                }
+                
 
             case 3:
                 print("\nEntrez la description de l'entree d'argent : ", terminator: "")
@@ -328,7 +300,7 @@ func AjouterTransaction() {
 
 func listerTransactions() {
     if descriptions.isEmpty {
-        print("Aucune transaction disponible.")
+        print("\nAucune transaction disponible.")
         return
     }
     
@@ -343,5 +315,68 @@ func calculerSolde() {
     for montant in montants {
         total += montant
     }
+    solde_disponible = total
     print("Le solde actuel est : \(total) HTG")
 }
+
+//Menu de gestion de l'economat
+func MenuGestionEconomat() {
+    while true{
+        print("\n1-Ajouter une transaction financiere")
+        print("2-Lister toutes les transactions")
+        print("3-Calculer le solde actuel")
+        print("4-Retour au menu principal")
+        print("Votre choix : ",terminator: "")
+
+        if let input = readLine(), let choix = Int(input){
+
+            switch choix {
+            case 1:
+                AjouterTransaction()
+            case 2:
+                listerTransactions()
+            case 3:
+                calculerSolde()
+            case 4:
+                gestion_des_taches()
+            default:
+                print("nombre invalide ! Choisissez un chiffre entre 1 et 4")
+            }
+        }
+        else {
+                print("Entree invalide ! Veuillez entrer un nombre entier.")
+            }
+    }
+}
+
+//Fonction principale
+func gestion_des_taches(){
+    var choix_menu_principal:Int = 0
+    while (choix_menu_principal == 0 || choix_menu_principal < 0 || choix_menu_principal > 3 ){
+        choix_menu_principal = menu_principal()
+        if(choix_menu_principal == 0 || choix_menu_principal < 0 || choix_menu_principal > 3){
+            print("\nVous pouvez choisir un nombre allant de 1 a 3 selon le menu suivant\n")
+        }
+    }
+    switch choix_menu_principal {
+    case 1:
+        MenuGestionEtudiant()
+    case 2:
+        MenuGestionEconomat()
+    case 3:
+        return
+    default:
+        print("Erreur : Saisi incorrecte")
+        return
+    }
+}
+//Lancement de l'application
+gestion_des_taches()
+
+
+
+
+
+
+
+
